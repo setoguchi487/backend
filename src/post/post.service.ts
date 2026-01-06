@@ -26,6 +26,11 @@ export class PostService {
             throw new ForbiddenException('Invalid or expired token');
         }
 
+        // 総件数を取得
+        const totalCount = await this.microPostsRepository
+            .createQueryBuilder('micro_post')
+            .getCount();
+
         const qb = await this.microPostsRepository
         .createQueryBuilder('micro_post')
         .leftJoinAndSelect('user', 'user', 'user_id = micro_post.user_id')
@@ -47,7 +52,10 @@ export class PostService {
     };
     const records = await qb.getRawMany<ResultType>();
     console.log(records);
-    return records;
+    return {
+        posts: records,
+        total: totalCount,
+    };
 
     }
 
