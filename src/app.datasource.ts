@@ -8,7 +8,10 @@ const AppDataSource = new DataSource({
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
         entities: ["src/entities/*.ts"],  //  エンティティファイル（後述）配列
-        migrations: ["src/migrations/*.ts"] // マイグレーションファイル（後述）配列
+        migrations: ["src/migrations/*.ts"], // マイグレーションファイル（後述）配列
+        ssl: {
+                rejectUnauthorized: false,
+        },
 })
 
 export default AppDataSource;
