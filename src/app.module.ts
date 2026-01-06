@@ -21,6 +21,9 @@ import { AuthModule } from './auth/auth.module';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: false,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     UserModule,
     PostModule,
