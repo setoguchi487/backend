@@ -9,5 +9,13 @@ async function bootstrap() {
 
   console.log('linstening on port ${port}');
   await app.listen(port, '0.0.0.0');
+
+  app.enableCors({
+  origin: [
+    'http://localhost:5173',
+    'https://https://frontend-0by4.onrender.com',
+  ],
+  credentials: true,
+});
 }
 bootstrap();
