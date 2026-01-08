@@ -27,8 +27,11 @@ export class PostController {
         @Param('id') id: string,
         @Query('token') token: string,
     ) {
+        console.log('Delete controller - id param:', id, 'type:', typeof id);
         const postId = parseInt(id, 10);
+        console.log('Parsed postId:', postId, 'isNaN:', isNaN(postId));
         if (isNaN(postId)) {
+            console.error('Failed to parse id:', id);
             throw new Error('Invalid post ID');
         }
         return await this.postService.deletePost(postId, token);
