@@ -25,7 +25,7 @@ export class PostController {
     @Delete(':id')
     async deletePost(
         @Param('id') id: number,
-        @Body('token') token: string,
+        @Query('token') token: string,
     ) {
         return await this.postService.deletePost(id, token);
     }
