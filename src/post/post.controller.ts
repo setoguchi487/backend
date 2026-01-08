@@ -24,9 +24,13 @@ export class PostController {
 
     @Delete(':id')
     async deletePost(
-        @Param('id') id: number,
+        @Param('id') id: string,
         @Query('token') token: string,
     ) {
-        return await this.postService.deletePost(id, token);
+        const postId = parseInt(id, 10);
+        if (isNaN(postId)) {
+            throw new Error('Invalid post ID');
+        }
+        return await this.postService.deletePost(postId, token);
     }
 }
