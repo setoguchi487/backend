@@ -60,6 +60,10 @@ export class PostService {
     }
 
     async createPost(message: string, token: string) {
+        console.log('=== createPost called ===');
+        console.log('message:', message);
+        console.log('token:', token);
+        
         //ログイン済みか確認
         const now = new Date();
         const auth = await this.authRepository.findOne({
@@ -72,10 +76,14 @@ export class PostService {
             throw new ForbiddenException('Invalid or expired token');
         }
 
+        console.log('auth.user_id:', auth.user_id);
+        
         const record = {
             user_id: auth.user_id,
             content: message,
         };
+        console.log('Saving record:', record);
         await this.microPostsRepository.save(record);
+        console.log('=== createPost completed ===');
     }
 }
