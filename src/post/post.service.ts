@@ -86,4 +86,40 @@ export class PostService {
         await this.microPostsRepository.save(record);
         console.log('=== createPost completed ===');
     }
+
+    async deletePost(postId: number, token: string) {
+        console.log('=== deletePost called ===');
+        console.log('postId:', postId);
+        console.log('token:', token);
+        
+        //ログイン済みか確認
+        const now = new Date();
+        const auth = await this.authRepository.findOne({
+            where: {
+                token: Equal(token),
+                expire_at: MoreThan(now),
+            },
+        });
+        if (!auth) {
+            throw new ForbiddenException('Invalid or expired token');
+        }
+
+        // 削除対象のポストを取得
+        const post = await this.microPostsRepository.findOne({
+            where: { id: Equal(postId) },
+        });
+        
+        if (!post) {
+            throw new ForbiddenException('Post not found');
+        }
+
+        // 自分のポストか確認
+        if (post.user_id !== auth.user_id) {
+            throw new ForbiddenException('You can only delete your own posts');
+        }
+
+        console.log('Deleting post:', post);
+        await this.microPostsRepository.remove(post);
+        console.log('=== deletePost completed ===');
+    }
 }
