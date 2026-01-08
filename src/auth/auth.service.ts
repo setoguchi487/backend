@@ -37,6 +37,7 @@ export class AuthService {
         const ret = {
             token: '',
             user_id: user.id,
+            name: user.name,
         };
 
         var expire = new Date();
