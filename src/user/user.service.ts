@@ -2,6 +2,8 @@ import {
     Injectable,
     NotFoundException,
     ForbiddenException,
+    ConflictException,
+    BadRequestException,
 } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,6 +21,20 @@ export class UserService {
     ) {}
 
     async createUser(name: string, email:string, password:string) {
+        if (!name || !email || !password) {
+            throw new BadRequestException('名前、メール、パスワードは必須です');
+        }
+
+        const existingName = await this.userRepository.findOne({ where: { name: Equal(name) } });
+        if (existingName) {
+            throw new ConflictException('ユーザー名は既に使用されています');
+        }
+
+        const existingEmail = await this.userRepository.findOne({ where: { email: Equal(email) } });
+        if (existingEmail) {
+            throw new ConflictException('メールアドレスは既に登録されています');
+        }
+
         const hash = createHash('md5').update(password).digest('hex');
         const record = {
             name: name,

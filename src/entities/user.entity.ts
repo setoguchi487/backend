@@ -14,7 +14,7 @@ export class User {
         name: string;
         @Column('varchar')
         hash: string;
-        @Column('varchar')
+        @Column({ type: 'varchar', unique: true })
         email: string;
         @CreateDateColumn()
         readonly created_at?: Date;
