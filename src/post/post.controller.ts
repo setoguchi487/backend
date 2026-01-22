@@ -22,7 +22,15 @@ export class PostController {
         return await this.postService.getList(token, start, records);
     }
 
-    @Delete(':id')
+    @Get('search')
+    async searchPosts(
+        @Query('q') query: string,
+        @Query('token') token: string,
+        @Query('start') start: number = 0,
+        @Query('records') records: number = 10,
+    ) {
+        return await this.postService.searchPosts(query, token, start, records);
+    }
     async deletePost(
         @Param('id') id: string,
         @Query('token') token: string,

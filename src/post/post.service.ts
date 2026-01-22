@@ -87,6 +87,59 @@ export class PostService {
         console.log('=== createPost completed ===');
     }
 
+    async searchPosts(query: string, token: string, start: number = 0, nr_records: number = 10) {
+        console.log('=== searchPosts called ===');
+        console.log('query:', query);
+        console.log('token:', token);
+        
+        //ログイン済みか確認
+        const now = new Date();
+        const auth = await this.authRepository.findOne({
+            where: {
+                token: Equal(token),
+                expire_at: MoreThan(now),
+            },
+        });
+        if (!auth) {
+            throw new ForbiddenException('Invalid or expired token');
+        }
+
+        // 総件数を取得
+        const totalCount = await this.microPostsRepository
+            .createQueryBuilder('micro_post')
+            .where('micro_post.content LIKE :query', { query: `%${query}%` })
+            .getCount();
+
+        // 検索結果を取得
+        const qb = await this.microPostsRepository
+            .createQueryBuilder('micro_post')
+            .leftJoinAndSelect('user', 'user', 'user_id = micro_post.user_id')
+            .select([
+                'micro_post.id as id',
+                'user.name as user_name',
+                'micro_post.content as content',
+                'micro_post.created_at as created_at',
+            ])
+            .where('micro_post.content LIKE :query', { query: `%${query}%` })
+            .orderBy('micro_post.created_at', 'DESC')
+            .offset(start)
+            .limit(nr_records);
+
+        type ResultType = {
+            id: number;
+            content: string;
+            user_name: string;
+            created_at: Date;
+        };
+        const records = await qb.getRawMany<ResultType>();
+        console.log('Search records:', records);
+        console.log('=== searchPosts completed ===');
+        return {
+            posts: records,
+            total: totalCount,
+        };
+    }
+
     async deletePost(postId: number, token: string) {
         console.log('=== deletePost called ===');
         console.log('postId:', postId, 'type:', typeof postId);
