@@ -19,7 +19,9 @@ export class PostController {
         @Query('start') start: number,
         @Query('records') records: number,
     ) {
-        return await this.postService.getList(token, start, records);
+        const startNum = Number(start) || 0;
+        const recordsNum = Number(records) || 10;
+        return await this.postService.getList(token, startNum, recordsNum);
     }
 
     @Get('search')
@@ -29,7 +31,9 @@ export class PostController {
         @Query('start') start: number = 0,
         @Query('records') records: number = 10,
     ) {
-        return await this.postService.searchPosts(query, token, start, records);
+        const startNum = Number(start) || 0;
+        const recordsNum = Number(records) || 10;
+        return await this.postService.searchPosts(query, token, startNum, recordsNum);
     }
     async deletePost(
         @Param('id') id: string,

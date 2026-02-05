@@ -13,7 +13,7 @@ export class PostService {
         private authRepository: Repository<Auth>,
     ) {}
 
-    async getList(token: string, start: number = 0, nr_records: number = 1) {
+    async getList(token: string, start: number = 0, nr_records: number = 10) {
         //ログイン済みか確認
         const now = new Date();
         const auth = await this.authRepository.findOne({
