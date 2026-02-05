@@ -19,6 +19,11 @@ export class AuthService {
             throw new BadRequestException('名前、メール、パスワードは必須です');
         }
 
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            throw new BadRequestException('パスワードは8文字以上で英数字の大文字・小文字を含めてください');
+        }
+
         const existingName = await this.userRepository.findOne({ where: { name: Equal(name) } });
         if (existingName) {
             throw new ConflictException('ユーザー名は既に使用されています');
