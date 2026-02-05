@@ -14,6 +14,8 @@ export class PostService {
     ) {}
 
     async getList(token: string, start: number = 0, nr_records: number = 10) {
+        const safeStart = Number.isFinite(start) ? Math.max(0, Math.floor(start)) : 0;
+        const safeRecords = Number.isFinite(nr_records) ? Math.max(1, Math.floor(nr_records)) : 10;
         //ログイン済みか確認
         const now = new Date();
         const auth = await this.authRepository.findOne({
@@ -41,8 +43,8 @@ export class PostService {
             'micro_post.created_at as created_at',
         ])
         .orderBy('micro_post.created_at', 'DESC')
-        .offset(start)
-        .limit(nr_records);
+        .skip(safeStart)
+        .take(safeRecords);
     
     type ResultType = {
         id: number;
@@ -88,6 +90,8 @@ export class PostService {
     }
 
     async searchPosts(query: string, token: string, start: number = 0, nr_records: number = 10) {
+        const safeStart = Number.isFinite(start) ? Math.max(0, Math.floor(start)) : 0;
+        const safeRecords = Number.isFinite(nr_records) ? Math.max(1, Math.floor(nr_records)) : 10;
         console.log('=== searchPosts called ===');
         console.log('query:', query);
         console.log('token:', token);
@@ -122,8 +126,8 @@ export class PostService {
             ])
             .where('micro_post.content LIKE :query', { query: `%${query}%` })
             .orderBy('micro_post.created_at', 'DESC')
-            .offset(start)
-            .limit(nr_records);
+            .skip(safeStart)
+            .take(safeRecords);
 
         type ResultType = {
             id: number;
