@@ -35,6 +35,8 @@ export class PostController {
         const recordsNum = Number(records) || 10;
         return await this.postService.searchPosts(query, token, startNum, recordsNum);
     }
+
+    @Delete(':id')
     async deletePost(
         @Param('id') id: string,
         @Query('token') token: string,
