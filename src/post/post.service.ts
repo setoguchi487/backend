@@ -36,7 +36,7 @@ export class PostService {
 
         const qb = await this.microPostsRepository
         .createQueryBuilder('micro_post')
-        .leftJoinAndSelect('user', 'user', 'user_id = micro_post.user_id')
+        .leftJoin('user', 'user', 'user.id = micro_post.user_id')
         .select([
             'micro_post.id as id',
             'user.name as user_name',
@@ -119,7 +119,7 @@ export class PostService {
         // 検索結果を取得
         const qb = await this.microPostsRepository
             .createQueryBuilder('micro_post')
-            .leftJoinAndSelect('user', 'user', 'user_id = micro_post.user_id')
+            .leftJoin('user', 'user', 'user.id = micro_post.user_id')
             .select([
                 'micro_post.id as id',
                 'user.name as user_name',
