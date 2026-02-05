@@ -16,6 +16,7 @@ export class PostService {
     async getList(token: string, start: number = 0, nr_records: number = 10) {
         const safeStart = Number.isFinite(start) ? Math.max(0, Math.floor(start)) : 0;
         const safeRecords = Number.isFinite(nr_records) ? Math.max(1, Math.floor(nr_records)) : 10;
+        console.log('getList params:', { start, nr_records, safeStart, safeRecords });
         //ログイン済みか確認
         const now = new Date();
         const auth = await this.authRepository.findOne({
@@ -53,6 +54,7 @@ export class PostService {
         created_at: Date;
     };
     const records = await qb.getRawMany<ResultType>();
+    console.log('getList records length:', records.length);
     console.log(records);
     return {
         posts: records,
