@@ -16,6 +16,10 @@ export class User {
         hash: string;
         @Column({ type: 'varchar', unique: true })
         email: string;
+        @Column({ type: 'date', nullable: true })
+        birthday?: Date;
+        @Column({ type: 'text', nullable: true })
+        profile?: string;
         @CreateDateColumn()
         readonly created_at?: Date;
         @UpdateDateColumn()

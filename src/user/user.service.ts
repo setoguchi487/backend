@@ -65,8 +65,15 @@ export class UserService {
         if (!user) {
             throw new NotFoundException('User not found');
         }
-
-        return user;
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            birthday: user.birthday ?? null,
+            profile: user.profile ?? null,
+            created_at: user.created_at,
+            updated_at: user.updated_at,
+        };
     }
 }
 
