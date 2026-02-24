@@ -79,7 +79,7 @@ export class UserService {
     async updateUser(
         token: string,
         id: number,
-        updates: { profile?: string; password?: string },
+        updates: { profile?: string; birthday?: string },
     ) {
         if (!Number.isFinite(id)) {
             throw new BadRequestException('ユーザIDが不正です');
@@ -108,8 +108,8 @@ export class UserService {
             throw new NotFoundException('User not found');
         }
 
-        const { profile, password } = updates;
-        if (profile === undefined && password === undefined) {
+        const { profile, birthday } = updates;
+        if (profile === undefined && birthday === undefined) {
             throw new BadRequestException('更新内容がありません');
         }
 
@@ -118,12 +118,8 @@ export class UserService {
             user.profile = trimmed === '' ? undefined : trimmed;
         }
 
-        if (password !== undefined) {
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-            if (!passwordRegex.test(password)) {
-                throw new BadRequestException('パスワードは8文字以上で英数字の大文字・小文字を含めてください');
-            }
-            user.hash = createHash('md5').update(password).digest('hex');
+        if (birthday !== undefined) {
+            user.birthday = birthday === '' ? undefined : new Date(birthday);
         }
 
         const updated = await this.userRepository.save(user);
