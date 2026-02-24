@@ -79,7 +79,7 @@ export class UserService {
     async updateUser(
         token: string,
         id: number,
-        updates: { profile?: string; birthday?: string },
+        updates: { profile?: string },
     ) {
         if (!Number.isFinite(id)) {
             throw new BadRequestException('ユーザIDが不正です');
@@ -108,19 +108,13 @@ export class UserService {
             throw new NotFoundException('User not found');
         }
 
-        const { profile, birthday } = updates;
-        if (profile === undefined && birthday === undefined) {
+        const { profile } = updates;
+        if (profile === undefined) {
             throw new BadRequestException('更新内容がありません');
         }
 
-        if (profile !== undefined) {
-            const trimmed = profile.trim();
-            user.profile = trimmed === '' ? undefined : trimmed;
-        }
-
-        if (birthday !== undefined) {
-            user.birthday = birthday === '' ? undefined : new Date(birthday);
-        }
+        const trimmed = profile.trim();
+        user.profile = trimmed === '' ? undefined : trimmed;
 
         const updated = await this.userRepository.save(user);
         return {
