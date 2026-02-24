@@ -115,7 +115,7 @@ export class UserService {
 
         if (profile !== undefined) {
             const trimmed = profile.trim();
-            user.profile = trimmed === '' ? null : trimmed;
+            user.profile = trimmed === '' ? undefined : trimmed;
         }
 
         if (password !== undefined) {
