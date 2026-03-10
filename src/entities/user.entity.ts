@@ -20,6 +20,8 @@ export class User {
         birthday?: Date;
         @Column({ type: 'text', nullable: true })
         profile?: string;
+        @Column({ type: 'varchar', nullable: true })
+        icon_url?: string;
         @CreateDateColumn()
         readonly created_at?: Date;
         @UpdateDateColumn()

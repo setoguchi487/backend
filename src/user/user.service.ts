@@ -71,6 +71,7 @@ export class UserService {
             email: user.email,
             birthday: user.birthday ?? null,
             profile: user.profile ?? null,
+            icon_url: user.icon_url ?? null,
             created_at: user.created_at,
             updated_at: user.updated_at,
         };
@@ -79,7 +80,7 @@ export class UserService {
     async updateUser(
         token: string,
         id: number,
-        updates: { profile?: string },
+        updates: { profile?: string; icon_url?: string },
     ) {
         if (!Number.isFinite(id)) {
             throw new BadRequestException('ユーザIDが不正です');
@@ -108,13 +109,20 @@ export class UserService {
             throw new NotFoundException('User not found');
         }
 
-        const { profile } = updates;
-        if (profile === undefined) {
+        const { profile, icon_url } = updates;
+        if (profile === undefined && icon_url === undefined) {
             throw new BadRequestException('更新内容がありません');
         }
 
-        const trimmed = profile.trim();
-        user.profile = trimmed === '' ? undefined : trimmed;
+        if (profile !== undefined) {
+            const trimmed = profile.trim();
+            user.profile = trimmed === '' ? undefined : trimmed;
+        }
+
+        if (icon_url !== undefined) {
+            const trimmed = icon_url.trim();
+            user.icon_url = trimmed === '' ? undefined : trimmed;
+        }
 
         const updated = await this.userRepository.save(user);
         return {
@@ -123,6 +131,7 @@ export class UserService {
             email: updated.email,
             birthday: updated.birthday ?? null,
             profile: updated.profile ?? null,
+            icon_url: updated.icon_url ?? null,
             created_at: updated.created_at,
             updated_at: updated.updated_at,
         };

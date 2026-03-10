@@ -24,8 +24,9 @@ export class UserController {
         @Param('id') id: string,
         @Query('token') token: string,
         @Body('profile') profile?: string,
+        @Body('icon_url') icon_url?: string,
     ) {
         const userId = Number(id);
-        return await this.userService.updateUser(token, userId, { profile });
+        return await this.userService.updateUser(token, userId, { profile, icon_url });
     }
 }
