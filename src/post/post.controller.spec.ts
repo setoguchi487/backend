@@ -4,7 +4,7 @@ import { PostService } from './post.service';
 import { ConfigModule } from '@nestjs/config';
 
 describe('PostController', () => {
-  let service: PostService; //差し替え用のサービス
+  let service: PostService; 
   //let controller: PostController;
 
   beforeEach(async () => {

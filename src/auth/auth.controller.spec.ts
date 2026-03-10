@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { ConfigModule } from '@nestjs/config';
 
 describe('AuthController', () => {
-  let service: AuthService; //差し替え用のサービス
+  let service: AuthService; 
   //let controller: AuthController;
 
   beforeEach(async () => {
