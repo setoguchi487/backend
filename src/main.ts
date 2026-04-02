@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +16,7 @@ async function bootstrap() {
       if (!origin || allowedOrigins.some(allowed => origin.startsWith(allowed))) {
         callback(null, true);
       } else {
-        console.log('CORS blocked origin:', origin);
+        Logger.warn(`CORS blocked origin: ${origin}`, 'Bootstrap');
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -25,7 +26,7 @@ async function bootstrap() {
   });
 
   const port = process.env.PORT || 8000;
-  console.log(`listening on port ${port}`);
+  Logger.log(`listening on port ${port}`, 'Bootstrap');
   await app.listen(port, '0.0.0.0');
 }
 bootstrap();
